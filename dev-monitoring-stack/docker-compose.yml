@@ -1,18 +1,29 @@
 version: "3.7"
 services:
-  influxdb-dev:
+  influxdb_dev:
     image: influxdb:1.7.8
     container_name: influxdb-dev-local
+    restart: on-failure
     env_file:
       - ./influxdb/influxdb.env
     ports:
       - 8086:8086
     volumes:
-      - "influxdb-dev-local-volume:/var/lib/influxdb"
+      - influxdb-dev-local-volume:/var/lib/influxdb
+
+  grafana_dev:
+    image: grafana/grafana:latest
+    container_name: grafana-dev-local
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    env_file:
+      - './grafana/grafana.env'
+    links:
+      - influxdb_dev
+    volumes:
+      - grafana-dev-local-volume:/var/lib/grafana
 
 volumes:
   influxdb-dev-local-volume:
-
-
-
-
+  grafana-dev-local-volume:
