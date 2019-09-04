@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   influxdb-dev:
-    image: influxdb:1.7.7
+    image: influxdb:1.7.8
     container_name: influxdb-dev-local
     env_file:
       - ./influxdb/influxdb.env
@@ -12,5 +12,7 @@ services:
 
 volumes:
   influxdb-dev-local-volume:
+
+
 
 
