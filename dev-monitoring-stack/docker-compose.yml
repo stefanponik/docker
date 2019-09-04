@@ -9,7 +9,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - influxdb-dev-local-volume:/var/lib/influxdb
+      - "influxdb-dev-local-volume:/var/lib/influxdb"
 
   grafana_dev:
     image: grafana/grafana:latest
@@ -22,7 +22,7 @@ services:
     links:
       - influxdb_dev
     volumes:
-      - grafana-dev-local-volume:/var/lib/grafana
+      - "grafana-dev-local-volume:/var/lib/grafana"
 
 volumes:
   influxdb-dev-local-volume:
