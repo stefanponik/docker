@@ -4,6 +4,7 @@ services:
     image: influxdb:1.7.8
     container_name: influxdb-dev-local
     restart: on-failure
+    network_mode: "bridge"
     env_file:
       - ./influxdb/influxdb.env
     ports:
@@ -15,6 +16,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana-dev-local
     restart: on-failure
+    network_mode: "bridge"
     ports:
       - "3000:3000"
     env_file:
