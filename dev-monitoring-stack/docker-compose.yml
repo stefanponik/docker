@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   influxdb_dev:
-    image: influxdb:1.7.8
+    image: influxdb:latest
     container_name: influxdb-dev-local
     restart: on-failure
     network_mode: "bridge"
@@ -10,7 +10,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - "influxdb-dev-local-volume:/var/lib/influxdb"
+      - ${HOME}/docker_volumes/influxdb-dev-local-volume:/var/lib/influxdb
 
   grafana_dev:
     image: grafana/grafana:latest
@@ -21,11 +21,17 @@ services:
       - "3000:3000"
     env_file:
       - './grafana/grafana.env'
-    links:
-      - influxdb_dev
     volumes:
-      - "grafana-dev-local-volume:/var/lib/grafana"
+      - ${HOME}/docker_volumes/grafana-dev-local-volume:/var/lib/grafana
 
-volumes:
-  influxdb-dev-local-volume:
-  grafana-dev-local-volume:
+  portainer_dev:
+   image: portainer/portainer
+   container_name: portainer-dev-local
+   restart: on-failure
+   network_mode: "bridge"
+   volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
+#   command: --admin-password-file ./portainer/portainer_password
+   ports:
+     - "9000:9000"
