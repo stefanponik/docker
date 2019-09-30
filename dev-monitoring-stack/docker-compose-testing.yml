@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  portainer_dev:
+   image: portainer/portainer
+   container_name: portainer-dev-local
+   restart: on-failure
+   network_mode: "bridge"
+   volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
+   command: --admin-password='Password1'
+   ports:
+     - "9000:9000"
