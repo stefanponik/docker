@@ -4,7 +4,9 @@ services:
     image: influxdb:latest
     container_name: influxdb-dev-local
     restart: on-failure
-    network_mode: "bridge"
+#    network_mode: "bridge"
+    networks:
+      - dev_net
     env_file:
       - ./influxdb/influxdb.env
     ports:
@@ -16,7 +18,9 @@ services:
     image: grafana/grafana:latest
     container_name: grafana-dev-local
     restart: on-failure
-    network_mode: "bridge"
+#    network_mode: "bridge"
+    networks:
+      - dev_net
     ports:
       - "3000:3000"
     env_file:
@@ -25,13 +29,19 @@ services:
       - ${HOME}/docker_volumes/grafana-dev-local-volume:/var/lib/grafana
 
   portainer_dev:
-   image: portainer/portainer
-   container_name: portainer-dev-local
-   restart: on-failure
-   network_mode: "bridge"
-   volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
-     - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
-   command: --admin-password='Password1'
-   ports:
-     - "9000:9000"
+    image: portainer/portainer
+    container_name: portainer-dev-local
+    restart: on-failure
+#   network_mode: "bridge"
+    networks:
+      - dev_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
+    command: --admin-password='Password1'
+    ports:
+      - "9000:9000"
+
+networks:
+  dev_net:
+    name: dev_net
