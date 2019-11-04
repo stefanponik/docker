@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  ubuntu1:
+    image: ubuntu:latest
+    container_name: ubuntu1
+    command: "sleep infinity"
+    networks:
+      - dev_net
+
+  ubuntu2:
+    image: ubuntu:latest
+    container_name: ubuntu2
+    command: "sleep infinity"
+    networks:
+      - dev_net
+
+networks:
+  dev_net:
+    name: dev_net
+
+# To test pings and bridge host networks and their links and dns intercept on mac or windows etc. 
