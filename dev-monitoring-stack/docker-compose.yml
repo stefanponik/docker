@@ -31,7 +31,6 @@ services:
     volumes:
       - ${HOME}/docker_volumes/grafana-dev-local-volume:/var/lib/grafana
 
-#
   portainer_dev:
     image: portainer/portainer
     container_name: portainer-dev-local
@@ -45,6 +44,22 @@ services:
     command: --admin-password='Password1'
     ports:
       - "9000:9000"
+
+  telegraf_dev:
+    image: telegraf:alpine
+    container_name: telegraf-dev
+    env_file:
+      - ./telegraf/telegraf.env
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/hostfs:ro
+      - /etc:/hostfs/etc:ro
+      - /proc:/hostfs/proc:ro
+      - /sys:/hostfs/sys:ro
+    networks:
+      - dev_net
+    restart: always
 
 # TEXT container with shell and you can install any tools needed to validate test network or others
 # To test pings and bridge host networks and their links and dns intercept on mac or windows etc. 
