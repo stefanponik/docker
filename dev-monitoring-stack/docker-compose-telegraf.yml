@@ -1,7 +1,8 @@
 version: "3.7"
 services:
-  telegraf:
+  telegraf_dev:
     image: telegraf:alpine
+    container_name: telegraf-agent-dev
     environment:
       HOST_ETC: /hostfs/etc
       HOST_PROC: /hostfs/proc
@@ -14,6 +15,10 @@ services:
       - /etc:/hostfs/etc:ro
       - /proc:/hostfs/proc:ro
       - /sys:/hostfs/sys:ro
-      - /var/run/utmp:/var/run/utmp:ro
-    network_mode: host
+    networks:
+      - dev_net
     restart: always
+
+networks:
+  dev_net:
+    name: dev_net
