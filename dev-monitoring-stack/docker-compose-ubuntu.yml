@@ -1,21 +1,23 @@
 version: "3.7"
 services:
-  ubuntu1:
+  ubuntu_1:
     image: ubuntu:latest
-    container_name: ubuntu1
+    container_name: ubuntu_test_1
     command: "sleep infinity"
     networks:
-      - dev_net
+      - dev_net_2
 
-  ubuntu2:
+  ubuntu_2:
     image: ubuntu:latest
-    container_name: ubuntu2
+    container_name: ubuntu_test_2
     command: "sleep infinity"
     networks:
       - dev_net
 
 networks:
   dev_net:
-    name: dev_net
+    name: dev_net_2
 
 # To test pings and bridge host networks and their links and dns intercept on mac or windows etc. 
+# Run command to iupdate and install utils 
+# -->> apt update && apt upgrade && apt install iputils-ping
