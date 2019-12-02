@@ -4,7 +4,7 @@
 version: "3.7"
 services:
   influxdb_dev:
-    image: influxdb:latest
+    image: influxdb:1.7.8
     container_name: influxdb-dev-local
     restart: on-failure
 #    network_mode: "bridge"
@@ -41,15 +41,21 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
-    command: --admin-password='Password1'
+#    command: --admin-password='Password1'
     ports:
       - "9000:9000"
+
+# Quick test from CLI to validate that you can see in DB all Docker engine matric
+# curl -i -G 'http://localhost:8086/query?db=MetricStore' -u admin:Password1 --data-urlencode 'q=SELECT * FROM "MetricStore"'
+# curl -i -G 'http://localhost:8086/query?db=MetricStore' --data-urlencode 'q=SELECT * FROM "MetricStore"'
 
   telegraf_dev:
     image: telegraf:alpine
     container_name: telegraf-dev
     env_file:
       - ./telegraf/telegraf.env
+    depends_on:
+      - "influxdb_dev"
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -73,8 +79,12 @@ services:
     networks:
       - dev_net
 
+# Creating new bridge network as default bridge don support links and its not recommended to use it
 networks:
   dev_net:
     name: dev_net
-
-  
+    driver: bridge
+    ipam:
+      config: 
+        - subnet: 172.16.16.0/24
+# Set subnet as random subnets can overlay with your own I know what a chance ? it did happen so I had to set it
