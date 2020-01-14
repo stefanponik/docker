@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  chronograf_dev:
+    image: chronograf
+    container_name: cronograf-dev-local
+    volumes:
+      - ${HOME}/docker_volumes/chronograf-dev-local-volume:/var/lib/chronograf
+    networks:
+      - dev_net
+    ports:
+      - "8888:8888"
+    restart: always
+    command: ["chronograf", "--influxdb-url=http://influxdb-dev-local:8086"]
+
+networks:
+  dev_net:
+    name: dev_net

@@ -82,6 +82,20 @@ services:
       - "9092:9092"
     restart: always
 
+  chronograf_dev:
+    image: chronograf
+    container_name: cronograf-dev-local
+    depends_on:
+      - "influxdb_dev"
+    volumes:
+      - ${HOME}/docker_volumes/chronograf-dev-local-volume:/var/lib/chronograf
+    networks:
+      - dev_net
+    ports:
+      - "8888:8888"
+    restart: always
+    command: ["chronograf", "--influxdb-url=http://influxdb-dev-local:8086"]
+
 # TEXT container with shell and you can install any tools needed to validate test network or others
 # To test pings and bridge host networks and their links and dns intercept on mac or windows etc. 
 # Run command to iupdate and install utils 
