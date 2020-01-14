@@ -2,13 +2,15 @@ version: "3.7"
 services:
   kapacitor_dev:
     image: kapacitor
-    container_name: kapacitor-dev
+    container_name: kapacitor-dev-local
     env_file:
       - ./kapacitor/kapacitor.env
     volumes:
       - ${HOME}/docker_volumes/kapacitor-dev-local-volume:/var/lib/kapacitor
     networks:
       - dev_net
+    ports:
+      - "9092:9092"
     restart: always
 
 networks:

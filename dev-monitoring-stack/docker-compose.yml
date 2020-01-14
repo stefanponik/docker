@@ -51,7 +51,7 @@ services:
 
   telegraf_dev:
     image: telegraf:alpine
-    container_name: telegraf-dev
+    container_name: telegraf-dev-local
     env_file:
       - ./telegraf/telegraf.env
     depends_on:
@@ -69,7 +69,7 @@ services:
 
   kapacitor_dev:
     image: kapacitor
-    container_name: kapacitor-dev
+    container_name: kapacitor-dev-local
     depends_on:
       - "influxdb_dev"
     env_file:
@@ -78,6 +78,8 @@ services:
       - ${HOME}/docker_volumes/kapacitor-dev-local-volume:/var/lib/kapacitor
     networks:
       - dev_net
+    ports:
+      - "9092:9092"
     restart: always
 
 # TEXT container with shell and you can install any tools needed to validate test network or others
