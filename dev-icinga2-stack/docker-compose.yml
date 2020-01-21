@@ -1,0 +1,88 @@
+# In your home directory make directory docker_volume 
+# This compose is build and tested on MAC. Other OS might require some tweaks
+# This is experimental development stack with no any security practice in place
+version: "3.7"
+services:
+  icinga2:
+    #image: jordan/icinga2
+    image: jordan/icinga2
+    restart: on-failure:5
+    # Set your hostname to the FQDN under which your
+    # sattelites will reach this container
+    container_name: icinga2-dev-local
+    hostname: icinga2-dev-local
+    env_file:
+      - ./mysql/mysql.env
+    environment:
+      - ICINGA2_FEATURE_GRAPHITE=1
+      # Important:
+      # keep the hostname graphite the same as
+      # the name of the graphite docker-container
+      - ICINGA2_FEATURE_GRAPHITE_HOST=graphite-dev-local
+      - ICINGA2_FEATURE_GRAPHITE_PORT=2003
+      - ICINGA2_FEATURE_GRAPHITE_URL=http://graphite-dev-local
+      # - ICINGA2_FEATURE_GRAPHITE_SEND_THRESHOLDS=true
+      # - ICINGA2_FEATURE_GRAPHITE_SEND_METADATA=false
+      #- ICINGAWEB2_ADMIN_USER=icingaadmin
+      #- ICINGAWEB2_ADMIN_PASS=icinga
+      #- ICINGA2_USER_FULLNAME=Icinga2 Docker Monitoring Instance
+      - DEFAULT_MYSQL_HOST=mariadb-dev-local
+    volumes:
+      - ${HOME}/docker_volumes/icinga/cache:/var/cache/icinga2
+      - ${HOME}/docker_volumes/icinga/certs:/etc/apache2/ssl
+      - ${HOME}/docker_volumes/icinga/etc/icinga2:/etc/icinga2
+      - ${HOME}/docker_volumes/icinga/etc/icingaweb2:/etc/icingaweb2
+      - ${HOME}/docker_volumes/icinga/lib/icinga:/var/lib/icinga2
+      - ${HOME}/docker_volumes/icinga/lib/php/sessions:/var/lib/php/sessions
+      - ${HOME}/docker_volumes/icinga/log/apache2:/var/log/apache2
+      - ${HOME}/docker_volumes/icinga/log/icinga2:/var/log/icinga2
+      - ${HOME}/docker_volumes/icinga/log/icingaweb2:/var/log/icingaweb2
+      - ${HOME}/docker_volumes/icinga/log/mysql:/var/log/mysql
+      - ${HOME}/docker_volumes/icinga/spool:/var/spool/icinga2
+      # Sending e-mail
+      #  See: https://github.com/jjethwa/icinga2#sending-notification-mails
+      #  If you want to enable outbound e-mail, edit the file mstmp/msmtprc
+      #  and configure to your corresponding mail setup. The default is a
+      #  Gmail example but msmtp can be used for any MTA configuration.
+      #  Change the aliases in msmtp/aliases to your recipients.
+      #  Then uncomment the rows below
+      # - ./msmtp/msmtprc:/etc/msmtprc:ro
+      # - ./msmtp/aliases:/etc/aliases:ro
+    ports:
+      - "4080:80"
+      - "4443:443"
+      - "5665:5665"
+    networks:
+      - dev_net
+  graphite:
+    image: graphiteapp/graphite-statsd:latest
+    container_name: graphite-dev-local
+    hostname: graphite-dev-local
+    restart: on-failure:5
+    volumes:
+      - ${HOME}/docker_volumes/graphite/conf:/opt/graphite/conf
+      - ${HOME}/docker_volumes/graphite/storage:/opt/graphite/storage
+      - ${HOME}/docker_volumes/graphite/log/graphite:/var/log/graphite
+      - ${HOME}/docker_volumes/graphite/log/carbon:/var/log/carbon
+    networks:
+      - dev_net
+  mysql:
+    image: mariadb
+    container_name: mariadb-dev-local
+    hostname: mariadb-dev-local
+    env_file:
+      - ./mysql/mysql.env
+    volumes:
+      - ${HOME}/docker_volumes/mysql/data:/var/lib/mysql
+      # If you have previously used the container's internal DB use:
+      #- ./data/icinga/lib/mysql:/var/lib/mysql
+    networks:
+      - dev_net
+
+networks:
+  dev_net:
+    name: dev_net
+    driver: bridge
+    ipam:
+      config: 
+        - subnet: 172.16.16.0/24
