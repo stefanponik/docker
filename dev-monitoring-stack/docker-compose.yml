@@ -101,12 +101,12 @@ services:
 # Run command to iupdate and install utils 
 # -->> apt update && apt upgrade && apt install iputils-ping
 
-  ubuntu_tester:
-    image: ubuntu:latest
-    container_name: ubuntu_tester_1
-    command: "sleep infinity"
-    networks:
-      - dev_net
+#  ubuntu_tester:
+#    image: ubuntu:latest
+#    container_name: ubuntu_tester_1
+#    command: "sleep infinity"
+#    networks:
+#      - dev_net
 
 # Creating new bridge network as default bridge don support links and its not recommended to use it
 networks:
