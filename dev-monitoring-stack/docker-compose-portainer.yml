@@ -1,13 +1,26 @@
 version: "3.7"
 services:
   portainer_dev:
-   image: portainer/portainer
-   container_name: portainer-dev-local
-   restart: on-failure
-   network_mode: "bridge"
-   volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
-     - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
-   command: --admin-password='Password1'
-   ports:
-     - "9000:9000"
+    image: portainer/portainer
+    container_name: portainer-dev-local
+    restart: always
+#   network_mode: "bridge"
+    networks:
+      - dev_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
+#    command: --admin-password='Password1'
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+
+
+# Creating new bridge network as default bridge don support links and its not recommended to use it
+networks:
+  dev_net:
+    name: dev_net
+    driver: bridge
+    ipam:
+      config: 
+        - subnet: 172.16.16.0/24

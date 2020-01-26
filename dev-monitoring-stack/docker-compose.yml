@@ -4,9 +4,9 @@
 version: "3.7"
 services:
   influxdb_dev:
-    image: influxdb:1.7.8
+    image: influxdb:latest
     container_name: influxdb-dev-local
-    restart: on-failure
+    restart: always
 #    network_mode: "bridge"
     networks:
       - dev_net
@@ -20,7 +20,7 @@ services:
   grafana_dev:
     image: grafana/grafana:latest
     container_name: grafana-dev-local
-    restart: on-failure
+    restart: always
 #    network_mode: "bridge"
     networks:
       - dev_net
@@ -34,7 +34,7 @@ services:
   portainer_dev:
     image: portainer/portainer
     container_name: portainer-dev-local
-    restart: on-failure
+    restart: always
 #   network_mode: "bridge"
     networks:
       - dev_net
@@ -44,6 +44,7 @@ services:
 #    command: --admin-password='Password1'
     ports:
       - "9000:9000"
+      - "8000:8000"
 
 # Quick test from CLI to validate that you can see in DB all Docker engine matric
 # curl -i -G 'http://localhost:8086/query?db=MetricStore' -u admin:Password1 --data-urlencode 'q=SELECT * FROM "MetricStore"'
