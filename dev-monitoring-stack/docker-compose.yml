@@ -16,6 +16,7 @@ services:
       - 8086:8086
     volumes:
       - ${HOME}/docker_volumes/influxdb-dev-local-volume:/var/lib/influxdb
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
   grafana_dev:
     image: grafana/grafana:latest

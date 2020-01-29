@@ -1,0 +1,29 @@
+# In your home directory make directory docker_volume 
+# This compose is build and tested on MAC. Other OS might require some tweaks
+# This is experimental development stack with no any security practice in place
+version: "3.7"
+services:
+  influxdb_dev:
+    image: influxdb:latest
+    container_name: influxdb-dev-local
+    restart: always
+#    network_mode: "bridge"
+    networks:
+      - dev_net
+    env_file:
+      - ./influxdb/influxdb.env
+    ports:
+      - 8086:8086
+    volumes:
+      - ${HOME}/docker_volumes/influxdb-dev-local-volume:/var/lib/influxdb
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+
+# Creating new bridge network rather then using default bridge as default bridge do not support links and its not recommended to use it
+networks:
+  dev_net:
+    name: dev_net
+    driver: bridge
+    ipam:
+      config: 
+        - subnet: 172.16.16.0/24
+# Set subnet as random subnets can overlay with your own I know what a chance ? it did happen so I had to set it
