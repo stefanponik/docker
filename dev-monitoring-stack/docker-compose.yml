@@ -19,7 +19,7 @@ services:
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 
   grafana_dev:
-    image: grafana/grafana:latest
+    image: grafana/grafana:6.7.2
     container_name: grafana-dev-local
     restart: always
 #    network_mode: "bridge"
