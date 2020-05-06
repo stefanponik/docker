@@ -6,6 +6,7 @@ services:
   influxdb_dev:
     image: influxdb:latest
     container_name: influxdb-dev-local
+    hostname: influxdb-dev-local
     restart: always
 #    network_mode: "bridge"
     networks:
@@ -32,20 +33,21 @@ services:
     volumes:
       - ${HOME}/docker_volumes/grafana-dev-local-volume:/var/lib/grafana
 
-  portainer_dev:
-    image: portainer/portainer
-    container_name: portainer-dev-local
-    restart: always
-#   network_mode: "bridge"
-    networks:
-      - dev_net
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
-#    command: --admin-password='Password1'
-    ports:
-      - "9000:9000"
-      - "8000:8000"
+# No Longer required to use on MAC as there is now Docker Dashboard
+#  portainer_dev:
+#    image: portainer/portainer
+#    container_name: portainer-dev-local
+#    restart: always
+##   network_mode: "bridge"
+#    networks:
+#      - dev_net
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ${HOME}/docker_volumes/portainer-dev-local-volume:/data
+##    command: --admin-password='Password1'
+#    ports:
+#      - "9000:9000"
+#      - "8000:8000"
 
 # Quick test from CLI to validate that you can see in DB all Docker engine matric
 # curl -i -G 'http://localhost:8086/query?db=MetricStore' -u admin:Password1 --data-urlencode 'q=SELECT * FROM "MetricStore"'

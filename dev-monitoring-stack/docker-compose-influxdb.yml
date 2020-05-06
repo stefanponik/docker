@@ -6,6 +6,7 @@ services:
   influxdb_dev:
     image: influxdb:latest
     container_name: influxdb-dev-local
+    hostname: influxdb-dev-local
     restart: always
 #    network_mode: "bridge"
     networks:
